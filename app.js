@@ -76,7 +76,8 @@
   var fit = function () {
     S.mobile = isMobile();
     if (S.view !== 'card') return;
-    var w = wrap.offsetWidth, h = wrap.offsetHeight || 1, pad = S.mobile ? 40 : 48;
+    if (S.mobile) { S.s = 1; S.x = 0; S.y = 0; wrap.style.marginBottom = '0px'; applyCard(false); return; }
+    var w = wrap.offsetWidth, h = wrap.offsetHeight || 1, pad = 48;
     var avail = window.innerHeight - pad;
     S.s = Math.max(0.4, Math.min(S.mobile ? 1 : 0.99, avail / h));
     S.x = (w - w * S.s) / 2; S.y = Math.max(0, (avail - h * S.s) / 2);
@@ -170,10 +171,16 @@
   var coverOf = function (p) {
     if (p.cover) return p.cover;
     var m = p.media[0];
-    if (m.yt) return 'https://i.ytimg.com/vi/' + m.yt + '/hqdefault.jpg';
+    if (m.yt) return 'https://i.ytimg.com/vi/' + m.yt + '/hq720.jpg';
     if (m.vimeo) return 'https://vumbnail.com/' + m.vimeo + '.jpg';
     if (m.img) return m.img;
     return '';
+  };
+  var countOf = function (p) {
+    var n = p.media.length; if (n < 2) return '';
+    var imgs = p.media.filter(function (m) { return m.img; }).length;
+    var word = imgs === n ? (kindOf(p) === 'foto' ? (PT ? 'fotos' : 'photos') : (PT ? 'imagens' : 'images')) : (imgs ? (PT ? 'peças' : 'pieces') : (PT ? 'vídeos' : 'videos'));
+    return n + ' ' + word;
   };
   var FL = ['all', 'edicao', 'motion', 'foto', 'design', 'index'];
   var renderTabs = function () {
@@ -194,14 +201,15 @@
     if (S.filter === 'index') {
       html = '<div class="plist"><div class="phead print"><span>' + tr('year') + '</span><span>' + tr('project') + '</span><span>' + tr('type') + '</span><span>' + tr('client') + '</span><span></span></div>' +
         list.map(function (p) {
-          return '<div class="pitem"><button class="prow" data-p="' + p.id + '"><span class="stamp pyear">' + p.year + '</span><span class="print ptitle">' + esc(titleOf(p)) + '</span><span class="print pmeta">' + esc(p.type[L]) + '</span><span class="print pmeta">' + esc(clientOf(p)) + '</span><span class="pdot" style="background-color:' + rgba(COL[kindOf(p)], 1) + '"></span></button></div>';
+          return '<div class="pitem"><button class="prow" data-p="' + p.id + '"><span class="stamp pyear">' + p.year + '</span><span class="print ptitle">' + esc(titleOf(p)) + (countOf(p) ? ' <span class="stamp pcnt">' + countOf(p) + '</span>' : '') + '</span><span class="print pmeta">' + esc(p.type[L]) + '</span><span class="print pmeta">' + esc(clientOf(p)) + '</span><span class="pdot" style="background-color:' + rgba(COL[kindOf(p)], 1) + '"></span></button></div>';
         }).join('') + '</div>';
     } else {
       html = '<div class="prints">' + list.map(function (p) {
         var h = hsh(p.id), rot = ((h % 70) / 10 - 3.5).toFixed(1), trot = (((h >> 3) % 120) / 10 - 6).toFixed(1), tx = ((h >> 5) % 40) - 20;
-        return '<button class="pcard" data-p="' + p.id + '" style="transform:rotate(' + rot + 'deg)">' +
+        var cnt = countOf(p);
+        return '<button class="pcard' + (cnt ? ' stack' : '') + '" data-p="' + p.id + '" style="transform:rotate(' + rot + 'deg)">' +
           '<span class="ptape" aria-hidden="true" style="transform:translateX(' + tx + 'px) rotate(' + trot + 'deg);background-color:' + rgba(COL[kindOf(p)], 0.72) + '"></span>' +
-          '<span class="pimg"><img src="' + esc(coverOf(p)) + '" alt="" loading="lazy" draggable="false" onerror="this.className=\'fail\'"></span>' +
+          '<span class="pimg">' + (cnt ? '<span class="pst pst1" aria-hidden="true"></span><span class="pst pst2" aria-hidden="true"></span>' : '') + '<img src="' + esc(coverOf(p)) + '" alt="" loading="lazy" draggable="false" onerror="if(this.src.indexOf(\'hq720\')>0){this.src=this.src.replace(\'hq720\',\'mqdefault\')}else{this.outerHTML=\'<span class=&quot;gph&quot;></span>\'}">' + (cnt ? '<span class="stamp pbadge">' + cnt + '</span>' : '') + '</span>' +
           '<span class="pcapt"><span class="stamp pcy">' + p.year + '</span><span class="pct">' + esc(titleOf(p)) + '</span><span class="pcm">' + esc(p.type[L]) + '</span></span></button>';
       }).join('') + '</div>';
     }

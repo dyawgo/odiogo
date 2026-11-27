@@ -7,8 +7,10 @@
 <meta name="description" content="Diogo Seoane Gomes — edição de vídeo, motion graphics e direção criativa. Lisboa.">
 <meta property="og:title" content="Diogo Seoane Gomes">
 <meta property="og:description" content="Digital Handyman · Dept. of Visual Research">
-<meta property="og:image" content="https://odiogo.pt/assets/foto.jpg">
-<link rel="icon" href="assets/pencil.svg" type="image/svg+xml">
+<meta property="og:image" content="https://odiogo.pt/assets/icon-512.png">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/favicon-64.png" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
@@ -73,7 +75,7 @@ a{color:#2A211B;text-decoration:none}a:hover{color:#A8441A}
 .pcard{position:relative;border:0;background:transparent;padding:0;cursor:pointer;display:flex;flex-direction:column;gap:14px;text-align:left;color:#1E1712;transition:transform .25s ease;font:inherit}
 .pcard:hover{transform:rotate(0deg) translateY(-6px) scale(1.03)!important}
 .pimg{position:relative;display:block;background:#F7F3EC;padding:10px 10px 30px;box-shadow:0 1px 2px rgba(40,25,10,.18),0 10px 22px rgba(40,25,10,.12)}
-.pimg img.fail{opacity:0}.pimg img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;filter:saturate(.9) contrast(1.02);background:#3F3B37}
+.gph{display:block;width:100%;aspect-ratio:4/3;background:#3F3B37 url(assets/lum.png);background-size:400px;background-blend-mode:multiply}.pimg img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;filter:saturate(.9) contrast(1.02);background:#3F3B37}
 .ptape{position:absolute;top:-11px;left:50%;width:78px;height:24px;margin-left:-39px;z-index:2;box-shadow:0 1px 1px rgba(0,0,0,.06)}
 .pcapt{display:flex;flex-direction:column;gap:3px;padding:0 4px}
 .pcy{font-size:14px}.pct{font:600 16px/1.3 Archivo,sans-serif}.pcm{font:400 13px 'Special Elite',monospace;opacity:.75}
@@ -101,6 +103,11 @@ a{color:#2A211B;text-decoration:none}a:hover{color:#A8441A}
 .pnav{display:flex;align-items:center;gap:6px}
 .parr{border:0;background:transparent;cursor:pointer;width:48px;height:44px;display:inline-flex;align-items:center;justify-content:center;mix-blend-mode:multiply}.parr:hover svg path{stroke-width:2.4}
 .pcount{font-size:15px;min-width:52px;text-align:center}
+.pst{position:absolute;inset:0;background:#F3EEE5;box-shadow:0 1px 2px rgba(40,25,10,.16),0 6px 14px rgba(40,25,10,.08);z-index:-1}
+.pst1{transform:rotate(4deg) translate(9px,5px)}.pst2{transform:rotate(-3deg) translate(-8px,7px)}
+.pbadge{position:absolute;right:12px;bottom:7px;font-size:12px;letter-spacing:.08em}
+.pcnt{font-size:12px;letter-spacing:.06em;font-weight:400;margin-left:6px;opacity:.75;white-space:nowrap}
+.pcard:hover .pst1{transform:rotate(5deg) translate(12px,4px)}.pcard:hover .pst2{transform:rotate(-4deg) translate(-10px,6px)}.pst{transition:transform .25s ease}
 @media (max-width:700px){
 .page{flex-direction:column;align-items:stretch;gap:22px;padding:20px 12px 48px}
 .face{padding:70px 20px 80px!important;gap:20px!important}
@@ -109,6 +116,7 @@ a{color:#2A211B;text-decoration:none}a:hover{color:#A8441A}
 .prints{grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 18px;padding:20px 4px}.pimg{padding:7px 7px 20px}.pct{font-size:14px}.tab{padding:8px 11px;font-size:14px}.projview{padding-top:56px}
 .phead{display:none}.prow{grid-template-columns:44px minmax(0,1fr) 18px;row-gap:2px}.prow .pyear{grid-column:1;grid-row:1}.prow .ptitle,.prow .pmeta{grid-column:2}.prow .pdot{grid-column:3;grid-row:1}
 .soc{gap:18px}
+.burger,.backfix{mix-blend-mode:normal;background:rgba(237,233,225,.92);border-radius:50%;width:48px;height:48px;top:10px}.burger{left:10px}.backfix{right:10px}
 }
 </style>
 </head>
