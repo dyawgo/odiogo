@@ -209,7 +209,7 @@
         var cnt = countOf(p);
         return '<button class="pcard' + (cnt ? ' stack' : '') + '" data-p="' + p.id + '" style="transform:rotate(' + rot + 'deg)">' +
           '<span class="ptape" aria-hidden="true" style="transform:translateX(' + tx + 'px) rotate(' + trot + 'deg);background-color:' + rgba(COL[kindOf(p)], 0.72) + '"></span>' +
-          '<span class="pimg">' + (cnt ? '<span class="pst pst1" aria-hidden="true"></span><span class="pst pst2" aria-hidden="true"></span>' : '') + '<img src="' + esc(coverOf(p)) + '" alt="" loading="lazy" draggable="false" onerror="this.className=\'fail\'">' + (cnt ? '<span class="stamp pbadge">' + cnt + '</span>' : '') + '</span>' +
+          '<span class="pimg">' + (cnt ? '<span class="pst pst1" aria-hidden="true"></span><span class="pst pst2" aria-hidden="true"></span>' : '') + '<img src="' + esc(coverOf(p)) + '" alt="" loading="lazy" draggable="false" onerror="this.outerHTML=\'<span class=&quot;gph&quot;></span>\'" onload="if(this.naturalWidth<=120)this.outerHTML=\'<span class=&quot;gph&quot;></span>\'">' + (cnt ? '<span class="stamp pbadge">' + cnt + '</span>' : '') + '</span>' +
           '<span class="pcapt"><span class="stamp pcy">' + p.year + '</span><span class="pct">' + esc(titleOf(p)) + '</span><span class="pcm">' + esc(p.type[L]) + '</span></span></button>';
       }).join('') + '</div>';
     }
