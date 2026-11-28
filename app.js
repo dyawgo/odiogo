@@ -22,7 +22,7 @@
     cml: ['Câmara Municipal de Lisboa', 'Lisbon City Council'], job2: ['Edição vídeo e motion graphics', 'Video editing and motion graphics'],
     gov: ['Governo de Portugal', 'Portuguese Government'], job3: ['Videógrafo oficial do XIX, XX e XXI Governos', 'Official videographer for the 19th, 20th and 21st Governments'],
     job5: ['Edição vídeo', 'Video editing'], job6: ['Imagem, edição vídeo e régie', 'Camera, video editing and studio control'],
-    all: ['Tudo', 'All'], edicao: ['Edição', 'Editing'], motion: ['Motion', 'Motion'], foto: ['Fotografia', 'Photography'], design: ['Design', 'Design'], index: ['Index', 'Index'],
+    all: ['Todos', 'All'], still: ['Still', 'Still'], edicao: ['Edição', 'Editing'], motion: ['Motion', 'Motion'], foto: ['Fotografia', 'Photography'], design: ['Design', 'Design'], index: ['Index', 'Index'],
     year: ['Ano', 'Year'], project: ['Projeto', 'Project'], type: ['Tipo', 'Type'], client: ['Cliente', 'Client'],
     video: ['Vídeo', 'Video'], close: ['Fechar', 'Close'], back: ['Voltar ao cartão', 'Back to card']
   };
@@ -147,7 +147,7 @@
 
   /* ---------- projetos ---------- */
   var P = (window.PROJECTS || []).filter(function (p) { return p.media && p.media.length; });
-  var COL = { all: [243, 238, 230], edicao: [229, 138, 110], motion: [127, 166, 211], foto: [232, 195, 90], design: [147, 179, 126], index: [201, 191, 176] };
+  var COL = { all: [243, 238, 230], still: [232, 195, 90], edicao: [229, 138, 110], motion: [127, 166, 211], foto: [232, 195, 90], design: [147, 179, 126], index: [201, 191, 176] };
   var rgba = function (c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; };
   var tagsOf = function (p) {
     var t = p.type[0].toLowerCase(), tags = [];
@@ -157,7 +157,9 @@
     if (t.indexOf('design') >= 0 || t.indexOf('poster') >= 0 || t.indexOf('style') >= 0) tags.push('design');
     return tags;
   };
-  var kindOf = function (p) { var t = tagsOf(p); return t.indexOf('foto') >= 0 && t.indexOf('edicao') < 0 ? 'foto' : t.indexOf('design') >= 0 ? 'design' : t.indexOf('motion') >= 0 && t.indexOf('edicao') < 0 ? 'motion' : 'edicao'; };
+  var isVid = function (p) { return p.media.some(function (m) { return m.yt || m.vimeo || m.file; }); };
+  var kindOf = function (p) { return isVid(p) ? 'motion' : 'still'; };
+  var kindOld = function (p) { var t = tagsOf(p); return t.indexOf('foto') >= 0 && t.indexOf('edicao') < 0 ? 'foto' : t.indexOf('design') >= 0 ? 'design' : t.indexOf('motion') >= 0 && t.indexOf('edicao') < 0 ? 'motion' : 'edicao'; };
   var hsh = function (s) { var h = 0; for (var q = 0; q < s.length; q++) h = (h * 31 + s.charCodeAt(q)) | 0; return Math.abs(h); };
   var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
   var titleOf = function (p) { return (!PT && p.titleEN) ? p.titleEN : p.title; };
@@ -179,10 +181,10 @@
   var countOf = function (p) {
     var n = p.media.length; if (n < 2) return '';
     var imgs = p.media.filter(function (m) { return m.img; }).length;
-    var word = imgs === n ? (kindOf(p) === 'foto' ? (PT ? 'fotos' : 'photos') : (PT ? 'imagens' : 'images')) : (imgs ? (PT ? 'peças' : 'pieces') : (PT ? 'vídeos' : 'videos'));
+    var word = imgs === n ? (kindOld(p) === 'foto' ? (PT ? 'fotos' : 'photos') : (PT ? 'imagens' : 'images')) : (imgs ? (PT ? 'peças' : 'pieces') : (PT ? 'vídeos' : 'videos'));
     return n + ' ' + word;
   };
-  var FL = ['all', 'edicao', 'motion', 'foto', 'design', 'index'];
+  var FL = ['all', 'motion', 'still', 'index'];
   var renderTabs = function () {
     $('tabs').setAttribute('aria-label', PT ? 'Filtrar projetos' : 'Filter projects');
     $('tabs').innerHTML = FL.map(function (f) {
@@ -196,9 +198,11 @@
   });
   var renderProjects = function () {
     renderTabs();
-    var list = P.filter(function (p) { return S.filter === 'all' || S.filter === 'index' || tagsOf(p).indexOf(S.filter) >= 0; });
+    var list = P.filter(function (p) { return S.filter === 'all' || S.filter === 'index' || kindOf(p) === S.filter; });
     var html;
-    if (S.filter === 'index') {
+    if (!list.length) {
+      html = '<p class="stamp" style="padding:40px 4px;font-size:16px;opacity:.6">' + (PT ? 'Em breve.' : 'Coming soon.') + '</p>';
+    } else if (S.filter === 'index') {
       html = '<div class="plist"><div class="phead print"><span>' + tr('year') + '</span><span>' + tr('project') + '</span><span>' + tr('type') + '</span><span>' + tr('client') + '</span><span></span></div>' +
         list.map(function (p) {
           return '<div class="pitem"><button class="prow" data-p="' + p.id + '"><span class="stamp pyear">' + p.year + '</span><span class="print ptitle">' + esc(titleOf(p)) + (countOf(p) ? ' <span class="stamp pcnt">' + countOf(p) + '</span>' : '') + '</span><span class="print pmeta">' + esc(p.type[L]) + '</span><span class="print pmeta">' + esc(clientOf(p)) + '</span><span class="pdot" style="background-color:' + rgba(COL[kindOf(p)], 1) + '"></span></button></div>';
